@@ -12,6 +12,7 @@ It includes the packages and libraries below
 - Swagger
 - SignalR
 - OpenXml
+- Jwt Authentication
 
 N-Tier architecture and repository unit of work pattern is used in this solution. .Net Core dependency injection 
 is used without using any third party dependency injection library. It can be runned as a service by installing
