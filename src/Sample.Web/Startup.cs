@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Sample.Core;
 using Sample.Core.Encryption;
@@ -25,6 +27,7 @@ using Sample.Web.Mvc.Filters;
 using Serilog;
 using System;
 using System.Linq;
+using System.Text;
 
 namespace Sample.Web
 {
@@ -51,6 +54,7 @@ namespace Sample.Web
             AddEventPublisher(services);
             AddTaskServices(services, typeFinder);
             AddSwaggerService(services);
+            AddJwtAuthentication(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -136,7 +140,7 @@ namespace Sample.Web
             services.AddScoped(typeof(IExportManager<,>), typeof(ExportManager<,>));
 
             //TokenHandler
-            services.AddScoped<ITokenHandler, TokenHandler>();
+            services.AddScoped<ITokenHandler, Services.Rest.TokenHandler>();
 
             //EnumManager
             services.AddScoped<IEnumManager, EnumManager>();
@@ -202,6 +206,25 @@ namespace Sample.Web
             });
         }
 
+        private void AddJwtAuthentication(IServiceCollection services)
+        {
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                };
+            });
+            services.AddMvc();
+        }
+
         #endregion Services
 
         #region Application
@@ -216,6 +239,8 @@ namespace Sample.Web
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

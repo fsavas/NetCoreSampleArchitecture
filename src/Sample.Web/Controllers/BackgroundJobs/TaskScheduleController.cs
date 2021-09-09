@@ -8,6 +8,7 @@ using Sample.Services.BackgroundJobs;
 using Sample.Web.Core.Models;
 using Sample.Web.Core.Models.BackgroundJobs;
 using System;
+using Sample.Web.Controllers;
 
 namespace Sample.Web.Controllers.BackgroundJobs
 {

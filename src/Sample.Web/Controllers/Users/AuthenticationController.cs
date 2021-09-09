@@ -1,12 +1,19 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Sample.Core.Defaults;
 using Sample.Core.Domain.Users;
 using Sample.Services.Users;
 using Sample.Web.Core.Models;
 using Sample.Web.Core.Models.Users;
-using System;
+using Sample.Web.Controllers;
 
 namespace Sample.Web.Controllers.Users
 {
@@ -17,16 +24,18 @@ namespace Sample.Web.Controllers.Users
         private readonly IAuthenticationService _authenticationService;
         private readonly IMapper _mapper;
         private readonly IMemoryCache _memoryCache;
+        private readonly IConfiguration _config;
 
         #endregion Fields
 
         #region Constructor
 
-        public AuthenticationController(IAuthenticationService authenticationService, IMapper mapper, IMemoryCache memoryCache)
+        public AuthenticationController(IAuthenticationService authenticationService, IMapper mapper, IMemoryCache memoryCache, IConfiguration config)
         {
             _authenticationService = authenticationService;
             _mapper = mapper;
             _memoryCache = memoryCache;
+            _config = config;
         }
 
         #endregion Constructor
@@ -34,6 +43,7 @@ namespace Sample.Web.Controllers.Users
         #region Base Methods
 
         [HttpPost("Login")]
+        [AllowAnonymous]
         public ServiceResult PostLogin([FromBody] UserModel value)
         {
             try
@@ -50,10 +60,12 @@ namespace Sample.Web.Controllers.Users
                     return new ServiceResult { Success = false, Message = MemoryCacheKeys.InvalidUsernamePassword, Data = null };
                 }
 
+                var tokenString = GenerateJSONWebToken(value);
+
                 if (_memoryCache.TryGetValue(MemoryCacheKeys.ControllerActionSuccess, out string message))
                     successMessage = message;
 
-                return new ServiceResult { Success = true, Message = successMessage, Data = null };
+                return new ServiceResult { Success = true, Message = successMessage, Data = tokenString };
             }
             catch (Exception e)
             {
@@ -62,6 +74,7 @@ namespace Sample.Web.Controllers.Users
         }
 
         [HttpPost("Logout")]
+        [AllowAnonymous]
         public ServiceResult PostLogout()
         {
             try
@@ -85,6 +98,25 @@ namespace Sample.Web.Controllers.Users
             {
                 return new ServiceResult { Success = false, Message = e.Message, Data = null };
             }
+        }
+
+        private string GenerateJSONWebToken(UserModel userModel)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[] {
+                new Claim(JwtRegisteredClaimNames.Sub, userModel.Username),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+                _config["Jwt:Issuer"],
+                claims,
+                expires: DateTime.Now.AddMinutes(120),
+                signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
         #endregion Base Methods
