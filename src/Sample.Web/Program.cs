@@ -6,6 +6,7 @@ using Serilog.Sinks.MSSqlServer;
 using System;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.IO;
 using System.Threading;
 
 namespace Sample.Web
@@ -19,7 +20,7 @@ namespace Sample.Web
                 .Enrich.FromLogContext()
                 .WriteTo.File("./LogsFolder/log.txt")//todo get from DB . current directory
                 .WriteTo.Console()
-                .WriteTo.MSSqlServer(connectionString: "Data Source=.\\SQLExpress01;Initial Catalog=Sample;Integrated Security=True",
+                .WriteTo.MSSqlServer(connectionString: "Data Source=11.11.10.162;Initial Catalog=Sample;User ID=docker;Password=docker", //"Data Source=.\\SQLExpress01;Initial Catalog=Sample;Integrated Security=True",
                     tableName: "Log", restrictedToMinimumLevel: LogEventLevel.Information,
                     columnOptions: new ColumnOptions
                     {
@@ -79,7 +80,18 @@ namespace Sample.Web
 
         private static void RunThread(object info)
         {
-            Thread.Sleep(1000);
+            int i = 0;
+
+            while (true)
+            {
+                using (StreamWriter sw = File.AppendText("./LogsFolder/log.txt"))
+                {
+                    sw.WriteLine(i.ToString());
+                }
+
+                Thread.Sleep(1000);
+                i++;
+            }
         }
     }
 }
