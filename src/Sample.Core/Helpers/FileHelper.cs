@@ -9,7 +9,7 @@ namespace Sample.Core.Helpers
 
         public static string GetFilePath(string fileName, FileExtensionTypes fileExtensionTypes)
         {
-            var path = @"E:\Files\";//todo get from db
+            var path = @"./Files/";//todo get from db
             MakeContentDirectory(path);
 
             return path += fileName + "." + fileExtensionTypes; ;

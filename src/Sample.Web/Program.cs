@@ -17,8 +17,9 @@ namespace Sample.Web
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
-                .WriteTo.File("E:\\log\\log.txt")//todo get from DB
-                .WriteTo.MSSqlServer(connectionString: "Data Source=.\\SQLExpress01;Initial Catalog=Sample;Integrated Security=True",//todo get from appsettings
+                .WriteTo.File("./LogsFolder/log.txt")//todo get from DB . current directory
+                .WriteTo.Console()
+                .WriteTo.MSSqlServer(connectionString: "Data Source=.\\SQLExpress01;Initial Catalog=Sample;Integrated Security=True",
                     tableName: "Log", restrictedToMinimumLevel: LogEventLevel.Information,
                     columnOptions: new ColumnOptions
                     {
@@ -27,7 +28,10 @@ namespace Sample.Web
                             new SqlColumn { DataType = SqlDbType.NVarChar, ColumnName = "User"}
                         }
                     }
-                ).CreateLogger();
+                )
+                .CreateLogger();
+            
+            Serilog.Debugging.SelfLog.Enable(msg => Console.Error.WriteLine(msg));
 
             try
             {
@@ -48,6 +52,12 @@ namespace Sample.Web
             {
                 Log.CloseAndFlush();
             }
+        }
+
+        private static string GetConnectionString()
+        {
+            return Environment.GetEnvironmentVariable("ASPNETCORE_ConnectionStrings__DevConnection")
+                    ?? "Data Source=.\\SQLExpress01;Initial Catalog=Sample;Integrated Security=True";
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

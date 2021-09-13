@@ -33,12 +33,23 @@ namespace Sample.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public IConfiguration Configuration { get; }
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
-        }
 
-        public IConfiguration Configuration { get; }
+            // Read the connection string from the "ASPNETCORE_ConnectionStrings:DefaultConnection" environment variable
+            // RESTART Visual Studio if you add or edit environment variables for the change to take effect.
+            var builder = new ConfigurationBuilder()
+            .SetBasePath(env.ContentRootPath)
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+
+            // This one needs to be last for the environment variables to have the highest priority
+            builder.AddEnvironmentVariables("ASPNETCORE_");
+            Configuration = builder.Build();
+        }        
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)

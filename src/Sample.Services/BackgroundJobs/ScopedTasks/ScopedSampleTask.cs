@@ -79,7 +79,10 @@ namespace Sample.Services.BackgroundJobs.ScopedTasks
                 {
                     Log.Logger.Information("ScopedSampleTask error");
 
-                    await Task.Delay(taskSchedule.NextRunOnFailure, cancellationToken);
+                    if(taskSchedule != null)
+                        await Task.Delay(taskSchedule.NextRunOnFailure, cancellationToken);
+                    else
+                        await Task.Delay(90000, cancellationToken);
                 }
             }
         }

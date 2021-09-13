@@ -7,13 +7,18 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BA241FD7-B20
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Web", "src\Sample.Web\Sample.Web.csproj", "{27ED1F88-CB8E-47BC-8109-903758725B83}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Data", "src\Sample.Data\Sample.Data.csproj", "{C45E94DB-5CA1-493C-8335-5B13760DA7F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Data", "src\Sample.Data\Sample.Data.csproj", "{C45E94DB-5CA1-493C-8335-5B13760DA7F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Core", "src\Sample.Core\Sample.Core.csproj", "{ED46899E-62E3-49E6-942B-3C5666524F5F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Core", "src\Sample.Core\Sample.Core.csproj", "{ED46899E-62E3-49E6-942B-3C5666524F5F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Web.Core", "src\Sample.Web.Core\Sample.Web.Core.csproj", "{FBE40A61-9518-4C6B-AE96-F9177A42CB70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Web.Core", "src\Sample.Web.Core\Sample.Web.Core.csproj", "{FBE40A61-9518-4C6B-AE96-F9177A42CB70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sample.Services", "src\Sample.Services\Sample.Services.csproj", "{BD10FBB2-9966-40AE-B6DB-59B25FB06D6B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sample.Services", "src\Sample.Services\Sample.Services.csproj", "{BD10FBB2-9966-40AE-B6DB-59B25FB06D6B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docker", "docker", "{660C9890-704E-4CC6-8120-B8EBEE9D32D0}"
+	ProjectSection(SolutionItems) = preProject
+		Dockerfile = Dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

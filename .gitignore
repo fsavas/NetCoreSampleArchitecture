@@ -324,3 +324,5 @@ OpenCover/
 
 *.ndproj
 **/NDependOut/**
+
+LogsFolder/

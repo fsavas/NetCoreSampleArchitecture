@@ -181,7 +181,7 @@ namespace Sample.Data.Migrations
                     b.Property<string>("LogEvent")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LogKey")
+                    b.Property<int?>("LogKey")
                         .HasColumnType("int");
 
                     b.Property<string>("Message")

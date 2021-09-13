@@ -10,7 +10,7 @@ using Sample.Data;
 namespace Sample.Data.Migrations
 {
     [DbContext(typeof(BaseObjectContext))]
-    [Migration("20210902161523_Initial")]
+    [Migration("20210913105258_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -183,7 +183,7 @@ namespace Sample.Data.Migrations
                     b.Property<string>("LogEvent")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("LogKey")
+                    b.Property<int?>("LogKey")
                         .HasColumnType("int");
 
                     b.Property<string>("Message")

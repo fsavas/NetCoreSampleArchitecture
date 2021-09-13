@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Sample.Data.Migrations
 {
@@ -37,7 +37,7 @@ namespace Sample.Data.Migrations
                     Properties = table.Column<string>(type: "xml", nullable: true),
                     LogEvent = table.Column<string>(nullable: true),
                     User = table.Column<string>(nullable: true),
-                    LogKey = table.Column<int>(nullable: false)
+                    LogKey = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {

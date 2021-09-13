@@ -13,6 +13,6 @@ namespace Sample.Core.Domain.Logs
         public string Properties { get; set; }
         public string LogEvent { get; set; }
         public string User { get; set; }
-        public LogKeys LogKey { get; set; }
+        public LogKeys? LogKey { get; set; }
     }
 }
